@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.minipos.ui.viewmodel.PaymentState
 import com.example.minipos.ui.viewmodel.PaymentViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun PaymentScreen(viewModel: PaymentViewModel, onNavigateToHistory: () -> Unit) {
@@ -66,12 +67,18 @@ fun PaymentScreen(viewModel: PaymentViewModel, onNavigateToHistory: () -> Unit) 
         when (val state = paymentState) {
             is PaymentState.Success -> {
                 Text(text = state.message, color = MaterialTheme.colorScheme.primary)
-                LaunchedEffect(Unit) {
+                LaunchedEffect(state) {
                     amountInput = ""
+                    delay(10000) //10 s
+                    viewModel.resetState()
                 }
             }
             is PaymentState.Error -> {
                 Text(text = state.message, color = MaterialTheme.colorScheme.error)
+                LaunchedEffect(state) {
+                    delay(10000) //10s
+                    viewModel.resetState()
+                }
             }
             PaymentState.Loading -> {
                 Text(text = "Procesando...")
